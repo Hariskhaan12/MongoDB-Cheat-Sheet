@@ -1,0 +1,205 @@
+MongoDB:
+
+MongoDB is a Document Based Database. uses Json and under the hode bson(adding extra datatype suppported)
+MongoDB are Scable both horizontal and vertical
+
+"horizontal scaling refers to adding additional nodes, vertical scaling
+ describes adding more power to your current machines. For instance,
+ if your server requires more processing power, vertical scaling
+ would mean upgrading the CPUs". 
+
+Cluster: 
+
+Cluster is Basically creating a Space in Cloud .
+
+
+SHARDING:
+
+Sharding is Basically horizontal Scaling of Your Database.
+to Reduce the computation.
+
+whereas Vertical Scaling is Adding more Resources when the data Grows.
+and Horizontal is spreading your data into set of differnent nodes.
+
+
+CONNECT TO MONGOSHELL
+
+!) if you want to connect with local mongoDB
+ > mongosh
+!) if you want to connect to database which is on the Website 
+ > copy the connection String and just simply paste it on terminal.
+ 
+
+
+
+COMMANDS FOR INTERACT to MongoDB USING MONGOSH(mongo Shell)
+
+
+1)show dbs
+
+2)use <dbname> .. will create if there is not any with that name
+
+3)show collections
+
+to drop database
+
+4) db.dropDatabase() > will delete the current databse your r using.
+
+5)exit> to end the terminal.
+
+db.users > will create a collection .insertOne to add one Record
+6)db.users.insertOne({})
+
+7)db.users.find();
+
+8) db.users.insertMany([]) > will take array of objects
+
+9) db.users.find().limit(2)
+
+10) db.users.find().sort(-1)
+
+sort alphabatic Order and limit the result
+11) db.users.find().sort({name:1}).limit(2) > accending
+
+if you wanted to skip any entry
+12) db.users.find().skip(1).limit(2) > skip first document and give 2nd and 3rd
+
+--TO FIND SPECIFIC DOCUMENT  >Where clause
+
+13)db.users.find({name:"Haris"})
+
+  --TO FIND SPECIFIC DOCUMENT with Specific Fields (like select query)
+
+14) db.users.find({name:"Rahman",{name:1,age:1}}) > display only name and age field.
+
+15) db.users.find({name:"Rahman",{name:1,age:1,_id:0}}) > display only name and age field and dont display id.
+
+16) db.users.find({name:"Rahman",{age:0}}) > display every field except age.
+
+
+
+----------------- COMPLEX-------------------------------------
+
+17)db.users.find({age:{$gt:2}})
+
+18)db.users.find({name:{$eq:"Haris"}})
+
+19)db.users.find({name:{$ne:"Haris"}})
+
+20)db.users.find({age:{$lt:2}}) and for <= 17)db.users.find({age:{$lte:2}})
+
+-- check for multiple values name is in haris or john return that.
+
+21) db.users.find({name:{$in:["Haris","John"]}})
+
+
+-- CHeck specific field is there or not
+
+22) db.users.find({name:{$exits:true}})
+
+23) db.users.find({age:{$gte:20,$lte:40}})
+
+
+another way to perfrom AND Operation
+24) db.users.find({$and:[{name:"Rahman"},{age:{$gt:12}}]})  OR db.users.find({name:"Rahman",age:{$gt:12}}) -> prefer mostly this one
+
+THE ONLY WAY TO PERFORM OR OPERATION
+
+OR operation you have to do this.  $or takes an array of mutiple objects.
+
+25 )db.users.find({$or:[{age:{$lt:25}},{name:"Rahman"}]})
+
+
+
+
+IN ORDER TO COMPARE TWO COLUMNS
+
+26 ) db.users.find({$expr:{$gt:["$debt","$balance"]}}) > returns a document where debt is greater than balance.
+
+
+for nested Property
+
+27)  db.users.find({"address.street":6})
+
+
+
+---------FIND ONE
+
+28 ) db.users.findOne({age:{$lte:40}})
+
+
+-------- COUNT DOCUMENT
+29 ) db.users.countDocuments({age:{$gte:30}})
+
+
+
+
+
+----------------- TO UPDATE-------------------------
+
+
+30)  db.users.updateOne({name:"Haris"},{$set:{age:50}})
+31) db.users.updateOne({name:"Ali"},{$inc:{age:3}}) increament age by 3
+
+--TO Rename the Column
+
+32) db.users.updateOne({FirstName:"Ali"},{$rename:{FirstName:"name"}})
+
+
+-- TO UNSET THE ENTIRE PROPERTY
+
+33) db.users.updateOne({name:"Ali"},{$unset:{age:""}})
+
+-- TO push value into existing Array property
+
+34) db.users.updateOne({name:"Ali"},{$push:{hobbies:"Coding"}}) 
+
+
+-- TO push multiple value into existing Array property
+
+34) db.users.updateOne({name:"Ali"},{$push:{hobbies:{$each:['a','b','etc']}}})
+
+
+-- TO REMOVE AN ELEMENT
+35) db.users.updateOne({name:"Ali"},{$pull:{hobbies:"Coding"}}) 
+
+
+
+--------- UPDATE MANY
+
+36) db.users.updateMany({address:{$exists:true}},{$unset:{address:""}})
+
+--REPLACE
+
+37)  db.users.replaceOne({name:"Rahman"},{name:"Rahman Khan",age:30}) replace the entire object with the passed one.
+
+
+
+------ $in and $nin OPERATOR (check varies of values)
+
+
+38) db.books.find({rating:{$in:[7,8,9]}})
+
+
+39) db.books.find({rating:{$nin:[7,8,9]}})
+
+
+
+------------ QUERING THROUGH ARRAY 
+
+
+through Array ?
+40) db.books.find({genres:"Programing"})
+
+if You want exact match of array nothing more in that array then
+41) db.books.find({genres:["Programing"})
+
+
+If you wanted to check 2 valus must be there in array 
+42) db.books.find({genres:{$all:['Programing','Sci-fi']}})
+
+
+---------QUERING through Nested Documents ?
+get all the book where a name called abc reviews it.
+
+43) db.books.find({"reviews.name":"abc"})
